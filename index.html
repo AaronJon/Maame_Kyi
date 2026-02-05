@@ -3,121 +3,171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Impossible NO Valentine</title>
+<title>For H / Abena 💖</title>
+
 <style>
     body {
         margin: 0;
         font-family: 'Segoe UI', sans-serif;
-        background: #1e1e2f;
+        background: linear-gradient(135deg, #1e1e2f, #2b2b45);
         color: #fff;
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         height: 100vh;
         overflow: hidden;
         text-align: center;
     }
-    h1 { margin-bottom: 20px; }
+
+    .screen {
+        max-width: 500px;
+        padding: 30px;
+    }
+
+    h1 {
+        margin-bottom: 15px;
+    }
+
+    p {
+        font-size: 1.1em;
+        margin-bottom: 25px;
+    }
+
+    .question {
+        font-size: 1.4em;
+        margin-bottom: 20px;
+    }
+
     button {
-        padding: 15px 30px;
-        margin: 10px;
-        font-size: 20px;
+        padding: 15px 35px;
+        font-size: 18px;
         border: none;
-        border-radius: 10px;
+        border-radius: 12px;
         cursor: pointer;
         transition: all 0.3s ease;
+        margin: 10px;
     }
+
     .yes {
         background: #ff4d6d;
         color: #fff;
     }
+
     .no {
-        background: #aaa;
+        background: #bbb;
         color: #222;
         position: relative;
     }
-    .question {
-        margin-bottom: 20px;
-        font-size: 1.3em;
+
+    .hidden {
+        display: none;
     }
-    .hidden { display: none; }
+
     .confetti-piece {
         position: absolute;
         width: 10px;
         height: 10px;
-        background-color: red;
-        opacity: 0.8;
+        opacity: 0.9;
         animation: fall 3s linear infinite;
     }
+
     @keyframes fall {
-        0% { transform: translateY(-10px) rotate(0deg);}
-        100% { transform: translateY(100vh) rotate(360deg);}
+        0% { transform: translateY(-10px) rotate(0deg); }
+        100% { transform: translateY(100vh) rotate(360deg); }
     }
 </style>
 </head>
+
 <body>
 
-<div id="intro">
+<!-- INTRO -->
+<div class="screen" id="intro">
     <h1>⚠️ Official Valentine Survey</h1>
     <p>Please answer honestly. This is extremely important 😏</p>
-    <button id="startBtn">Start</button>
+    <button class="yes" id="startBtn">Start</button>
 </div>
 
-<div id="quiz" class="hidden">
-    <div class="question" id="quizQuestion">Who stole my heart?</div>
-    <button class="quizOption">Only you 😍</button>
-    <button class="quizOption">Obviously you 😏</button>
+<!-- MINI QUIZ -->
+<div class="screen hidden" id="quiz">
+    <div class="question">Who stole my heart?</div>
+    <button class="yes quizOption">Only you 😍</button>
+    <button class="yes quizOption">Obviously you 😏</button>
 </div>
 
-<div id="finalQuestion" class="hidden">
-    <div class="question" id="finalText">Will you be my Valentine?</div>
+<!-- ADMIRATION QUESTION -->
+<div class="screen hidden" id="finalQuestion">
+    <div class="question">What type of woman do you admire most?</div>
+    <div id="optionText" style="margin-bottom:25px; font-size:1.3em;"></div>
+
     <button class="yes" id="yesBtn">YES 💖</button>
     <button class="no" id="noBtn">NO ❌</button>
 </div>
 
-<div id="endScreen" class="hidden">
-    <h1>🎉 FINALLY!</h1>
-    <p>Happy Valentine’s Day, my amazing babe 💖</p>
+<!-- END -->
+<div class="screen hidden" id="endScreen">
+    <h1>💖 Result Found</h1>
+    <p style="font-size:1.4em;">
+        You are the woman I admire most.<br><br>
+        Always.<br>
+        <strong>H / Abena 😌</strong>
+    </p>
 </div>
 
 <script>
 const startBtn = document.getElementById('startBtn');
 const intro = document.getElementById('intro');
 const quiz = document.getElementById('quiz');
-const quizQuestion = document.getElementById('quizQuestion');
 const quizOptions = document.querySelectorAll('.quizOption');
 const finalQuestion = document.getElementById('finalQuestion');
+const optionText = document.getElementById('optionText');
 const yesBtn = document.getElementById('yesBtn');
 const noBtn = document.getElementById('noBtn');
 const endScreen = document.getElementById('endScreen');
 
-const miniQuestions = [
-    "What if I buy you chocolates? 🍫",
-    "What if I look at you like this forever 👀?",
-    "What if I promise extra hugs? 🤗",
-    "What if I cook your favorite meal? 🍲"
+const admirationOptions = [
+    "A) Someone kind, intelligent, and beautiful",
+    "B) Someone who brings peace and laughter",
+    "C) Someone strong, loving, and emotionally mature",
+    "D) H / Abena 😌"
 ];
 
-let noClickCount = 0;
+let currentStep = 0;
 
-// Start quiz
+// Start
 startBtn.onclick = () => {
     intro.classList.add('hidden');
     quiz.classList.remove('hidden');
 };
 
-// Quiz options
+// Quiz → admiration
 quizOptions.forEach(btn => {
     btn.onclick = () => {
         quiz.classList.add('hidden');
         finalQuestion.classList.remove('hidden');
-    }
+        showOption();
+    };
 });
 
-// NO button tricks
+// Show option
+function showOption() {
+    optionText.textContent = admirationOptions[currentStep];
+}
+
+// YES
+yesBtn.onclick = () => {
+    currentStep++;
+
+    if (currentStep < admirationOptions.length) {
+        showOption();
+    } else {
+        finalQuestion.classList.add('hidden');
+        endScreen.classList.remove('hidden');
+        createConfetti();
+    }
+};
+
+// NO runs away
 noBtn.addEventListener('mouseenter', () => {
-    // Move NO button randomly
     const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
     const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
     noBtn.style.position = 'absolute';
@@ -125,36 +175,14 @@ noBtn.addEventListener('mouseenter', () => {
     noBtn.style.top = y + 'px';
 });
 
-noBtn.addEventListener('click', () => {
-    noClickCount++;
-    // Show mini question
-    const newQuestion = miniQuestions[Math.floor(Math.random() * miniQuestions.length)];
-    document.getElementById('finalText').textContent = newQuestion;
-
-    // Grow YES button
-    yesBtn.style.transform = `scale(${1 + noClickCount * 0.2})`;
-
-    // Optional: shake NO button
-    noBtn.style.transform = 'translateX(-10px)';
-    setTimeout(() => { noBtn.style.transform = 'translateX(10px)'; }, 100);
-    setTimeout(() => { noBtn.style.transform = 'translateX(0px)'; }, 200);
-});
-
-// YES button click
-yesBtn.onclick = () => {
-    finalQuestion.classList.add('hidden');
-    endScreen.classList.remove('hidden');
-    createConfetti();
-};
-
 // Confetti
 function createConfetti() {
-    for(let i = 0; i < 50; i++){
+    for (let i = 0; i < 70; i++) {
         const confetti = document.createElement('div');
         confetti.classList.add('confetti-piece');
-        confetti.style.backgroundColor = `hsl(${Math.random()*360}, 100%, 50%)`;
+        confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
         confetti.style.left = Math.random() * window.innerWidth + 'px';
-        confetti.style.animationDuration = 2 + Math.random()*3 + 's';
+        confetti.style.animationDuration = 2 + Math.random() * 3 + 's';
         document.body.appendChild(confetti);
         setTimeout(() => confetti.remove(), 5000);
     }
